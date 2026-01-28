@@ -1,20 +1,150 @@
 ---
 import Layout from '../layouts/Layout.astro';
-const popularNumbers = [42, 69, 100, 365, 1337, 2026, 9999];
+
+// 1. Generate a list of numbers 1 to 100 automatically
+const numbersOneTo100 = Array.from({ length: 100 }, (_, i) => i + 1);
+
+// 2. A list of "Special" numbers to highlight
+const specialNumbers = [2026, 1337, 9999, 12345, 98765];
 ---
+
 <Layout title="The Ultimate Number Database" description="Mathematical properties for every number.">
-  <div style="text-align: center; padding: 4rem 0;">
-    <h1 style="font-size: 3rem; margin-bottom: 1rem; color: #0f172a;">Explore the Math Universe</h1>
-    <p style="font-size: 1.25rem; color: #475569; margin-bottom: 2rem;">
-      Discover prime factors, binary conversions, and properties for numbers 1 to 100,000.
-    </p>
+  
+  <div class="hero">
+    <h1>Explore the Math Universe</h1>
+    <p>Discover prime factors, binary conversions, and properties for numbers 1 to 100,000.</p>
     
-    <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
-      {popularNumbers.map(num => (
-        <a href={`/${num}`} style="background: #3b82f6; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold;">
-          Check {num}
+    <div class="search-box">
+      <input type="number" id="numberInput" placeholder="Enter a number (e.g. 555)" min="1" max="100000" />
+      <button id="searchBtn">Analyze Number ➜</button>
+    </div>
+  </div>
+
+  <div class="container">
+    
+    <h2 class="section-title">✨ Trending Numbers</h2>
+    <div class="number-grid">
+      {specialNumbers.map(num => (
+        <a href={`/${num}`} class="num-card special">
+          {num}
         </a>
       ))}
     </div>
+
+    <h2 class="section-title" style="margin-top: 40px;">🔢 Browse 1 to 100</h2>
+    <div class="number-grid small-grid">
+      {numbersOneTo100.map(num => (
+        <a href={`/${num}`} class="num-card">
+          {num}
+        </a>
+      ))}
+    </div>
+
   </div>
+
+  <script>
+    const input = document.getElementById('numberInput') as HTMLInputElement;
+    const btn = document.getElementById('searchBtn');
+
+    // Function to go to the page
+    function goToNumber() {
+      const val = input.value;
+      if (val) {
+        // Redirect to /number
+        window.location.href = `/${val}`;
+      } else {
+        alert("Please enter a number first!");
+      }
+    }
+
+    // Listen for clicks
+    btn?.addEventListener('click', goToNumber);
+
+    // Listen for "Enter" key
+    input?.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') goToNumber();
+    });
+  </script>
+
+  <style>
+    /* STYLES */
+    .hero {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      color: white;
+      padding: 4rem 1rem;
+      text-align: center;
+      border-radius: 0 0 20px 20px;
+      margin-bottom: 2rem;
+    }
+
+    h1 { font-size: 3rem; margin: 0; letter-spacing: -1px; }
+    p { font-size: 1.2rem; color: #94a3b8; margin-top: 10px; }
+
+    /* Search Box Styles */
+    .search-box {
+      margin-top: 30px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+    input {
+      padding: 15px 20px;
+      font-size: 1.1rem;
+      border-radius: 50px;
+      border: none;
+      width: 300px;
+      max-width: 100%;
+      outline: none;
+    }
+    button {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+    button:hover { background: #2563eb; }
+
+    .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+    .section-title { color: #334155; font-size: 1.5rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 20px; }
+
+    /* Grid Layout */
+    .number-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 15px;
+    }
+    /* Smaller grid for the 1-100 list */
+    .small-grid {
+      grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+    }
+
+    .num-card {
+      background: white;
+      text-align: center;
+      padding: 15px;
+      border-radius: 8px;
+      text-decoration: none;
+      color: #334155;
+      font-weight: bold;
+      border: 1px solid #e2e8f0;
+      transition: transform 0.1s, border-color 0.1s;
+    }
+    .num-card:hover {
+      transform: translateY(-3px);
+      border-color: #3b82f6;
+      color: #3b82f6;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+    .special {
+      background: #eff6ff;
+      border-color: #bfdbfe;
+      color: #1d4ed8;
+      font-size: 1.2rem;
+    }
+  </style>
 </Layout>
