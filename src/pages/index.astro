@@ -1,0 +1,20 @@
+---
+import Layout from '../layouts/Layout.astro';
+const popularNumbers = [42, 69, 100, 365, 1337, 2026, 9999];
+---
+<Layout title="The Ultimate Number Database" description="Mathematical properties for every number.">
+  <div style="text-align: center; padding: 4rem 0;">
+    <h1 style="font-size: 3rem; margin-bottom: 1rem; color: #0f172a;">Explore the Math Universe</h1>
+    <p style="font-size: 1.25rem; color: #475569; margin-bottom: 2rem;">
+      Discover prime factors, binary conversions, and properties for numbers 1 to 100,000.
+    </p>
+    
+    <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+      {popularNumbers.map(num => (
+        <a href={`/${num}`} style="background: #3b82f6; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold;">
+          Check {num}
+        </a>
+      ))}
+    </div>
+  </div>
+</Layout>

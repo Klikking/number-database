@@ -1,0 +1,199 @@
+---
+// src/pages/[number].astro
+import Layout from '../layouts/Layout.astro';
+
+
+// src/pages/[number].astro
+
+// 1. GENERATE PAGES for numbers 1 to 5000 (Adjust range as needed)
+export async function getStaticPaths() {
+  const range = Array.from({ length: 5000 }, (_, i) => i + 1);
+  return range.map((num) => ({
+    params: { number: num.toString() },
+    props: { number: num },
+  }));
+}
+
+const { number } = Astro.props;
+
+// --- MATH LOGIC ENGINE ---
+
+// 1. Basic conversions
+const binary = number.toString(2);
+const octal = number.toString(8);
+const hex = number.toString(16).toUpperCase();
+
+// 2. Roots and Powers
+const square = number ** 2;
+const cube = number ** 3;
+const sqrt = Math.sqrt(number).toFixed(5);
+const cbrt = Math.cbrt(number).toFixed(5);
+const log10 = Math.log10(number).toFixed(5);
+const log2 = Math.log2(number).toFixed(5);
+
+// 3. Parity & Checks
+const isEven = number % 2 === 0;
+const isPalindrome = number.toString() === number.toString().split('').reverse().join('');
+
+// 4. Factors Logic
+const factors = [];
+for(let i = 1; i <= Math.sqrt(number); i++) {
+    if(number % i === 0) {
+        factors.push(i);
+        if(i !== number/i) factors.push(number/i);
+    }
+}
+factors.sort((a,b) => a - b);
+const factorSum = factors.reduce((a, b) => a + b, 0);
+const isPrime = factors.length === 2;
+const isPerfect = factorSum - number === number; // Sum of divisors (excluding self) equals number
+
+// 5. Prime Factorization (The "Money" Keyword)
+function getPrimeFactors(n: number) {
+    const pf = [];
+    let d = 2;
+    let temp = n;
+    while (d * d <= temp) {
+        while (temp % d === 0) {
+            pf.push(d);
+            temp /= d;
+        }
+        d++;
+    }
+    if (temp > 1) pf.push(temp);
+    return pf;
+}
+const primeFactors = getPrimeFactors(number).join(' × ');
+
+// 6. Fibonacci Check
+function isSquare(n: number) { return n > 0 && Math.sqrt(n) % 1 === 0; }
+function isFibonacci(n: number) {
+    return isSquare(5 * n * n + 4) || isSquare(5 * n * n - 4);
+}
+const isFib = isFibonacci(number);
+
+// 7. Roman Numeral
+function toRoman(num: number) {
+  // We explicitly tell TS this is an object with string keys and number values
+  const roman: Record<string, number> = {
+    M:1000, CM:900, D:500, CD:400, C:100, XC:90, L:50, XL:40, X:10, IX:9, V:5, IV:4, I:1
+  };
+  
+  let str = '';
+  for ( const i in roman ) {
+    while ( num >= roman[i] ) {
+      str += i;
+      num -= roman[i];
+    }
+  }
+  return str;
+}
+const roman = toRoman(number);
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Number {number}: Properties, Factors, Prime Check, and Binary</title>
+    <meta name="description" content={`Everything about the number ${number}. Is it prime? Factors: ${factors.join(', ')}. Binary: ${binary}. Prime factorization: ${primeFactors}.`} />
+    <style>
+      :root { --bg: #f8fafc; --card: #ffffff; --primary: #4f46e5; --text: #1e293b; }
+      body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); padding: 2rem; max-width: 900px; margin: 0 auto; }
+      
+      header { text-align: center; margin-bottom: 3rem; }
+      h1 { font-size: 4rem; margin: 0; color: var(--primary); letter-spacing: -2px; }
+      .subtitle { color: #64748b; font-size: 1.2rem; margin-top: 10px; }
+      
+      .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; }
+      
+      .card { background: var(--card); padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); transition: transform 0.2s; }
+      .card:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); }
+      
+      .label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #64748b; font-weight: 700; margin-bottom: 0.5rem; }
+      .value { font-size: 1.5rem; font-weight: 600; font-family: 'Courier New', monospace; word-break: break-all; }
+      
+      .feature-tag { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; margin: 2px; }
+      .tag-green { background: #dcfce7; color: #166534; }
+      .tag-blue { background: #dbeafe; color: #1e40af; }
+      .tag-purple { background: #f3e8ff; color: #6b21a8; }
+      
+      .full-width { grid-column: 1 / -1; }
+      
+      .nav { margin-top: 4rem; display: flex; justify-content: space-between; }
+      a.btn { text-decoration: none; padding: 10px 20px; background: white; border-radius: 8px; color: var(--primary); font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    </style>
+  </head>
+  <body>
+    
+    <header>
+      <div style="margin-bottom: 1rem;">
+        {isEven ? <span class="feature-tag tag-blue">EVEN Number</span> : <span class="feature-tag tag-green">ODD Number</span>}
+        {isPrime && <span class="feature-tag tag-purple">PRIME Number</span>}
+        {isPerfect && <span class="feature-tag tag-green">PERFECT Number</span>}
+        {isFib && <span class="feature-tag tag-blue">FIBONACCI Sequence</span>}
+        {isPalindrome && <span class="feature-tag tag-purple">PALINDROME</span>}
+      </div>
+      <h1>{number}</h1>
+      <p class="subtitle">Mathematical properties and conversions</p>
+    </header>
+
+    <div class="dashboard">
+      
+      <div class="card full-width" style="text-align: center; border: 2px dashed #cbd5e1; background: transparent;">
+        <span class="label">Prime Factorization</span>
+        <div class="value" style="font-size: 2rem; color: var(--primary);">{primeFactors}</div>
+      </div>
+
+      <div class="card">
+        <div class="label">Binary (Base 2)</div>
+        <div class="value">{binary}</div>
+      </div>
+      <div class="card">
+        <div class="label">Hexadecimal (Base 16)</div>
+        <div class="value">#{hex}</div>
+      </div>
+      <div class="card">
+        <div class="label">Roman Numeral</div>
+        <div class="value">{roman}</div>
+      </div>
+      <div class="card">
+        <div class="label">Octal (Base 8)</div>
+        <div class="value">{octal}</div>
+      </div>
+
+      <div class="card">
+        <div class="label">Square Root</div>
+        <div class="value">{sqrt}</div>
+      </div>
+      <div class="card">
+        <div class="label">Cube Root</div>
+        <div class="value">{cbrt}</div>
+      </div>
+      <div class="card">
+        <div class="label">Logarithm (Base 10)</div>
+        <div class="value">{log10}</div>
+      </div>
+      <div class="card">
+        <div class="label">Squared (x²)</div>
+        <div class="value">{square}</div>
+      </div>
+
+      <div class="card full-width">
+        <div class="label">All Factors (Divisors)</div>
+        <div class="value" style="font-size: 1.1rem; line-height: 1.6;">{factors.join(', ')}</div>
+        <p style="font-size: 0.9rem; color: #64748b; margin-top: 10px;">
+          {number} has {factors.length} divisors. The sum of these divisors is {factorSum}.
+        </p>
+      </div>
+
+    </div>
+
+    <div class="nav">
+      {number > 1 ? <a href={`/${number - 1}`} class="btn">← Previous ({number - 1})</a> : <span></span>}
+      <a href={`/${number + 1}`} class="btn">Next ({number + 1}) →</a>
+    </div>
+
+  </body>
+</html>
+<Layout title={`Number ${number} Properties`} description={`Is ${number} prime? Factors and more.`}>
+  </Layout>

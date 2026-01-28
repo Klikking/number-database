@@ -1,0 +1,24 @@
+---
+// src/layouts/Layout.astro
+const { title, description } = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    </head>
+  <body style="font-family: system-ui, sans-serif; margin: 0; padding: 0; background-color: #f8fafc;">
+    <nav style="background: white; padding: 1rem; border-bottom: 1px solid #e2e8f0; text-align: center;">
+      <a href="/" style="text-decoration: none; font-weight: bold; color: #0f172a; font-size: 1.2rem;">🔢 The Number Database</a>
+    </nav>
+    <main style="max-width: 800px; margin: 0 auto; padding: 20px;">
+      <slot /> </main>
+    <footer style="text-align: center; padding: 2rem; color: #64748b; font-size: 0.9rem;">
+      <p>&copy; 2026 Number Database. All rights reserved.</p>
+      <a href="/about" style="color: #64748b;">About Us</a> | <a href="/contact" style="color: #64748b;">Contact</a>
+    </footer>
+  </body>
+</html>
