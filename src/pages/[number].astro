@@ -5,9 +5,9 @@ import Layout from '../layouts/Layout.astro';
 
 // src/pages/[number].astro
 
-// 1. GENERATE PAGES for numbers 1 to 5000 (Adjust range as needed)
+// 1. GENERATE PAGES for numbers 1 to 100000 (Adjust range as needed)
 export async function getStaticPaths() {
-  const range = Array.from({ length: 5000 }, (_, i) => i + 1);
+  const range = Array.from({ length: 100000 }, (_, i) => i + 1);
   return range.map((num) => ({
     params: { number: num.toString() },
     props: { number: num },

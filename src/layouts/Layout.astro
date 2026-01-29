@@ -9,16 +9,51 @@ const { title, description } = Astro.props;
     <meta name="viewport" content="width=device-width" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    </head>
-  <body style="font-family: system-ui, sans-serif; margin: 0; padding: 0; background-color: #f8fafc;">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+    <style>
+      /* Global Search Styles */
+      .nav-search { display: flex; gap: 10px; justify-content: center; margin-top: 10px; }
+      .nav-input { padding: 8px 15px; border-radius: 20px; border: 1px solid #ccc; font-size: 0.9rem; }
+      .nav-btn { background: #3b82f6; color: white; border: none; padding: 8px 15px; border-radius: 20px; cursor: pointer; }
+    </style>
+  </head>
+  <body style="font-family: system-ui, sans-serif; margin: 0; background-color: #f8fafc;">
+    
     <nav style="background: white; padding: 1rem; border-bottom: 1px solid #e2e8f0; text-align: center;">
-      <a href="/" style="text-decoration: none; font-weight: bold; color: #0f172a; font-size: 1.2rem;">🔢 The Number Database</a>
+      <a href="/" style="text-decoration: none; font-weight: 800; color: #0f172a; font-size: 1.5rem;">🔢 NumberDB</a>
+      
+      <div class="nav-search">
+        <input type="number" id="globalInput" class="nav-input" placeholder="Jump to number..." min="1" max="100000">
+        <button id="globalBtn" class="nav-btn">Go</button>
+      </div>
     </nav>
+
     <main style="max-width: 800px; margin: 0 auto; padding: 20px;">
-      <slot /> </main>
-    <footer style="text-align: center; padding: 2rem; color: #64748b; font-size: 0.9rem;">
-      <p>&copy; 2026 Number Database. All rights reserved.</p>
-      <a href="/about" style="color: #64748b;">About Us</a> | <a href="/contact" style="color: #64748b;">Contact</a>
+      <slot />
+    </main>
+
+    <footer style="text-align: center; padding: 3rem; color: #64748b; font-size: 0.9rem;">
+      <p>&copy; 2026 NumberDB. Built with Astro.</p>
     </footer>
+
+    <script>
+      // 1. Get the elements and tell TypeScript exactly what they are
+      const gInput = document.getElementById('globalInput') as HTMLInputElement;
+      const gBtn = document.getElementById('globalBtn');
+      
+      // 2. Define the function
+      const go = () => {
+        if(gInput && gInput.value) {
+          window.location.href = `/${gInput.value}`;
+        }
+      };
+
+      // 3. Add Event Listeners (with safety checks using '?')
+      gBtn?.addEventListener('click', go);
+      
+      gInput?.addEventListener('keypress', (e) => { 
+        if(e.key === 'Enter') go(); 
+      });
+    </script>
   </body>
 </html>
